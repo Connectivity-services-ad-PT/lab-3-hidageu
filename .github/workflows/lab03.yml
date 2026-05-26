@@ -22,13 +22,24 @@ jobs:
 
       - name: Start IoT mock
         run: |
-          npm run mock:iot &
+          npx prism mock contracts/iot-ingestion.openapi.yaml -p 4010 > prism-iot.log 2>&1 &
           sleep 15
 
       - name: Start Vision mock
         run: |
-          npm run mock:vision &
+          npx prism mock contracts/ai-vision.openapi.yaml -p 4011 > prism-vision.log 2>&1 &
           sleep 15
+
+      - name: Check mock servers
+        run: |
+          curl http://localhost:4010/health || true
+          curl http://localhost:4011/detect || true
 
       - name: Run Newman
         run: npm run test:mock
+
+      - name: Show logs
+        if: always()
+        run: |
+          cat prism-iot.log || true
+          cat prism-vision.log || true

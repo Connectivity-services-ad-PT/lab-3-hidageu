@@ -13,7 +13,7 @@
     "@stoplight/prism-cli": "latest",
     "@stoplight/spectral-cli": "latest",
     "newman": "latest",
-    "newman-reporter-htmlextra": "latest",
+    "newman-reporter-htmlextra": "^1.23.1",
     "wait-on": "latest"
   }
 }

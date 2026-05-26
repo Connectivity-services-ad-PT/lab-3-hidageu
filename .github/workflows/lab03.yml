@@ -17,17 +17,24 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Verify local lint report exists
+      - name: Verify lint report exists
         run: test -f reports/contract-lint-report.txt
 
       - name: Start IoT mock
-        run: nohup npm run mock:iot > prism-iot.log 2>&1 &
+        run: |
+          nohup npm run mock:iot > prism-iot.log 2>&1 &
+          sleep 10
 
       - name: Start Vision mock
-        run: nohup npm run mock:vision > prism-vision.log 2>&1 &
-
-      - name: Wait for IoT mock
-        run: sleep 8
+        run: |
+          nohup npm run mock:vision > prism-vision.log 2>&1 &
+          sleep 10
 
       - name: Run Newman
         run: npm run test:mock
+
+      - name: Show logs
+        if: always()
+        run: |
+          cat prism-iot.log || true
+          cat prism-vision.log || true

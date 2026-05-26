@@ -22,19 +22,13 @@ jobs:
 
       - name: Start IoT mock
         run: |
-          nohup npm run mock:iot > prism-iot.log 2>&1 &
-          sleep 10
+          npm run mock:iot &
+          sleep 15
 
       - name: Start Vision mock
         run: |
-          nohup npm run mock:vision > prism-vision.log 2>&1 &
-          sleep 10
+          npm run mock:vision &
+          sleep 15
 
       - name: Run Newman
         run: npm run test:mock
-
-      - name: Show logs
-        if: always()
-        run: |
-          cat prism-iot.log || true
-          cat prism-vision.log || true

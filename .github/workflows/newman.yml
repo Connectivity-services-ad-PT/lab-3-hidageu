@@ -23,6 +23,7 @@ jobs:
         run: |
           echo "Contract lint was executed locally. See reports/contract-lint-report.txt"
           test -f reports/contract-lint-report.txt
+
       - name: Start IoT Prism mock server
         run: nohup npm run mock:iot > prism-iot.log 2>&1 &
 
@@ -32,7 +33,6 @@ jobs:
       - name: Wait for mock servers
         run: |
           npx wait-on http://localhost:4010/health --timeout 30000
-          # npx wait-on http://localhost:4011/health --timeout 30000
 
       - name: Run Newman on mock environment
         run: npm run test:mock

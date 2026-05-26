@@ -1,2 +1,2 @@
-node_modules/
-reports/
+echo node_modules/ > .gitignore
+echo .env >> .gitignore

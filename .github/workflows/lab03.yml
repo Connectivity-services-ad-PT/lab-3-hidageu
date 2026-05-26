@@ -1,0 +1,33 @@
+name: Lab03 Newman Tests
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Verify local lint report exists
+        run: test -f reports/contract-lint-report.txt
+
+      - name: Start IoT mock
+        run: nohup npm run mock:iot > prism-iot.log 2>&1 &
+
+      - name: Start Vision mock
+        run: nohup npm run mock:vision > prism-vision.log 2>&1 &
+
+      - name: Wait for IoT mock
+        run: npx wait-on http://localhost:4010/health --timeout 30000
+
+      - name: Run Newman
+        run: npm run test:mock

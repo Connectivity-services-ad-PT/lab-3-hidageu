@@ -1,0 +1,48 @@
+openapi: 3.0.3
+info:
+  title: FIT4110 AI Vision Mock API
+  version: 1.0.0
+paths:
+  /health:
+    get:
+      responses:
+        '200':
+          description: Healthy
+          content:
+            application/json:
+              example:
+                status: ok
+                service: ai-vision
+  /detect:
+    post:
+      summary: Detect object from image url
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [imageUrl]
+              properties:
+                imageUrl:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Detection result
+          content:
+            application/json:
+              example:
+                detectionId: det-1001
+                labels:
+                  - name: person
+                    confidence: 0.91
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                type: https://example.com/problems/bad-request
+                title: Bad Request
+                status: 400
+                detail: imageUrl is required

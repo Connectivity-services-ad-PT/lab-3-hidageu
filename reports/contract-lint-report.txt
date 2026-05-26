@@ -1,0 +1,20 @@
+
+c:/Users/admin/Downloads/lab02_lab03_iot_complete/lab02_lab03_iot/contracts/ai-vision.openapi.yaml
+  1:1   warning  oas3-api-servers       OpenAPI "servers" must be present and non-empty array.
+  2:6   warning  info-contact           Info object must have "contact" object.                        info
+  2:6   warning  info-description       Info "description" must be present and non-empty string.       info
+  7:9   warning  operation-description  Operation "description" must be present and non-empty string.  paths./health.get
+  7:9   warning  operation-operationId  Operation must have "operationId".                             paths./health.get
+  7:9   warning  operation-tags         Operation must have non-empty "tags" array.                    paths./health.get
+ 17:10  warning  operation-description  Operation "description" must be present and non-empty string.  paths./detect.post
+ 17:10  warning  operation-operationId  Operation must have "operationId".                             paths./detect.post
+ 17:10  warning  operation-tags         Operation must have non-empty "tags" array.                    paths./detect.post
+
+c:/Users/admin/Downloads/lab02_lab03_iot_complete/lab02_lab03_iot/contracts/iot-ingestion.openapi.yaml
+  2:6   warning  info-contact           Info object must have "contact" object.                        info
+  20:9  warning  operation-description  Operation "description" must be present and non-empty string.  paths./health.get
+ 40:10  warning  operation-description  Operation "description" must be present and non-empty string.  paths./readings.post
+  97:9  warning  operation-description  Operation "description" must be present and non-empty string.  paths./readings.get
+ 149:9  warning  operation-description  Operation "description" must be present and non-empty string.  paths./readings/{readingId}.get
+
+✖ 14 problems (0 errors, 14 warnings, 0 infos, 0 hints)

@@ -1,0 +1,19 @@
+{
+  "name": "fit4110-lab02-lab03-iot-ingestion",
+  "version": "1.0.0",
+  "description": "Lab 02 OpenAPI contract combined with Lab 03 Postman Mock Newman testing",
+  "scripts": {
+    "lint": "spectral lint contracts/*.yaml > reports/contract-lint-report.txt",
+    "mock:iot": "prism mock contracts/iot-ingestion.openapi.yaml -p 4010",
+    "mock:vision": "prism mock contracts/ai-vision.openapi.yaml -p 4011",
+    "test:mock": "newman run postman/collections/FIT4110_lab03_iot_ingestion.postman_collection.json -e postman/environments/FIT4110_lab03_mock.postman_environment.json -r cli,junit,htmlextra --reporter-junit-export reports/newman-report.xml --reporter-htmlextra-export reports/newman-report.html",
+    "test:local": "newman run postman/collections/FIT4110_lab03_iot_ingestion.postman_collection.json -e postman/environments/FIT4110_lab03_local.postman_environment.json -r cli,junit,htmlextra --reporter-junit-export reports/newman-local-report.xml --reporter-htmlextra-export reports/newman-local-report.html"
+  },
+  "devDependencies": {
+    "@stoplight/prism-cli": "latest",
+    "@stoplight/spectral-cli": "latest",
+    "newman": "latest",
+    "newman-reporter-htmlextra": "latest",
+    "wait-on": "latest"
+  }
+}

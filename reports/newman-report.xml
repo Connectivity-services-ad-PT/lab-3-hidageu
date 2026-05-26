@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="FIT4110_lab03_iot_ingestion" tests="15" time="0.118">
+  <testsuite name="01_Functional / GET health" id="0dea4327-b469-46fa-b9f2-f1674d0ff699" timestamp="2026-05-26T06:50:41.295Z" tests="2" failures="0" errors="0" time="0.023">
+    <testcase name="Status code is 200" time="0.023" classname="01FunctionalGetHealth"/>
+    <testcase name="Health response has status" time="0.023" classname="01FunctionalGetHealth"/>
+  </testsuite>
+  <testsuite name="01_Functional / POST create valid reading" id="98c209d7-87eb-4d08-8208-fc561460c8a8" timestamp="2026-05-26T06:50:41.295Z" tests="3" failures="0" errors="0" time="0.005">
+    <testcase name="Status code is 201" time="0.005" classname="01FunctionalPostCreateValidReading"/>
+    <testcase name="Response has readingId" time="0.005" classname="01FunctionalPostCreateValidReading"/>
+    <testcase name="Response metric is valid" time="0.005" classname="01FunctionalPostCreateValidReading"/>
+  </testsuite>
+  <testsuite name="01_Functional / GET latest readings" id="11520bce-5932-4872-bcea-847911590d1b" timestamp="2026-05-26T06:50:41.295Z" tests="2" failures="0" errors="0" time="0.005">
+    <testcase name="Status code is 200" time="0.005" classname="01FunctionalGetLatestReadings"/>
+    <testcase name="Response has items array" time="0.005" classname="01FunctionalGetLatestReadings"/>
+  </testsuite>
+  <testsuite name="01_Functional / GET reading detail" id="59e37c1c-466c-413d-a881-f36a5d833c00" timestamp="2026-05-26T06:50:41.295Z" tests="2" failures="0" errors="0" time="0.003">
+    <testcase name="Status code is 200" time="0.003" classname="01FunctionalGetReadingDetail"/>
+    <testcase name="Response has detail fields" time="0.003" classname="01FunctionalGetReadingDetail"/>
+  </testsuite>
+  <testsuite name="02_Auth / POST valid token" id="f312e794-37f2-4e48-a3a5-5e322892bbba" timestamp="2026-05-26T06:50:41.295Z" tests="1" failures="0" errors="0" time="0.004">
+    <testcase name="Valid token returns success or mock-compatible status" time="0.004" classname="02AuthPostValidToken"/>
+  </testsuite>
+  <testsuite name="02_Auth / POST missing token" id="e4d0a2b7-d1e8-4933-9a7b-0fce43e40eb4" timestamp="2026-05-26T06:50:41.295Z" tests="1" failures="0" errors="0" time="0.004">
+    <testcase name="Unauthorized request returns 401 or 403" time="0.004" classname="02AuthPostMissingToken"/>
+  </testsuite>
+  <testsuite name="02_Auth / POST wrong token" id="573f5432-ea73-4465-af25-f446c5d4e9b0" timestamp="2026-05-26T06:50:41.295Z" tests="1" failures="0" errors="0" time="0.004">
+    <testcase name="Mock auth limitation documented" time="0.004" classname="02AuthPostWrongToken"/>
+  </testsuite>
+  <testsuite name="03_Negative / POST missing deviceId" id="c2780d67-c728-44d1-8587-f55d2af8091c" timestamp="2026-05-26T06:50:41.295Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="Invalid payload returns client error" time="0.004" classname="03NegativePostMissingDeviceId"/>
+    <testcase name="Error response follows ProblemDetails" time="0.004" classname="03NegativePostMissingDeviceId"/>
+  </testsuite>
+  <testsuite name="03_Negative / POST invalid metric enum" id="1447ec27-ac88-48d7-9910-889c889e3782" timestamp="2026-05-26T06:50:41.295Z" tests="1" failures="0" errors="0" time="0.005">
+    <testcase name="Invalid enum returns client error" time="0.005" classname="03NegativePostInvalidMetricEnum"/>
+  </testsuite>
+  <testsuite name="03_Negative / GET invalid limit query" id="6f86497c-d36a-43db-9454-458d2fbfeb1a" timestamp="2026-05-26T06:50:41.295Z" tests="1" failures="0" errors="0" time="0.005">
+    <testcase name="Invalid query returns client error" time="0.005" classname="03NegativeGetInvalidLimitQuery"/>
+  </testsuite>
+  <testsuite name="04_Boundary_Reliability / POST boundary high temperature" id="4d6979f5-0d68-418d-8f26-4c9bc6306192" timestamp="2026-05-26T06:50:41.295Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="High temperature accepted with warning or rejected" time="0.003" classname="04BoundaryReliabilityPostBoundaryHighTemperature"/>
+  </testsuite>
+  <testsuite name="04_Boundary_Reliability / GET max limit boundary" id="2fbde722-61a2-439e-b066-0696405f0d43" timestamp="2026-05-26T06:50:41.295Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="Max limit is accepted" time="0.003" classname="04BoundaryReliabilityGetMaxLimitBoundary"/>
+  </testsuite>
+  <testsuite name="04_Boundary_Reliability / GET rate limit behavior documented" id="da6f8936-2714-426a-8299-8dd8aa322765" timestamp="2026-05-26T06:50:41.295Z" tests="1" failures="0" errors="0" time="0.005">
+    <testcase name="Normal or rate-limited response is documented" time="0.005" classname="04BoundaryReliabilityGetRateLimitBehaviorDocumented"/>
+  </testsuite>
+  <testsuite name="05_Consumer_side_Smoke / POST AI Vision detect mock" id="c526b5a3-e3ac-4050-a013-85d37a471780" timestamp="2026-05-26T06:50:41.295Z" tests="2" failures="0" errors="0" time="0.042">
+    <testcase name="AI Vision mock returns 200" time="0.042" classname="05ConsumerSideSmokePostAiVisionDetectMock"/>
+    <testcase name="Detection response has labels" time="0.042" classname="05ConsumerSideSmokePostAiVisionDetectMock"/>
+  </testsuite>
+  <testsuite name="06_Local_only_NonFunctional / GET local response time" id="5655abea-a6c1-4e80-986a-9fccb207ac16" timestamp="2026-05-26T06:50:41.295Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="Skip latency test on mock" time="0.003" classname="06LocalOnlyNonFunctionalGetLocalResponseTime"/>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,334 @@
+openapi: 3.0.3
+info:
+  title: FIT4110 IoT Ingestion API
+  version: 1.0.0
+  description: |
+    Lab 02 OpenAPI contract for IoT Ingestion Service.
+    Lab 03 uses this contract for Prism Mock Server, Postman, Newman and CI.
+servers:
+  - url: http://localhost:8000
+    description: Local IoT Ingestion service
+  - url: http://localhost:4010
+    description: Prism mock server
+security:
+  - bearerAuth: []
+tags:
+  - name: Health
+  - name: Readings
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      operationId: getHealth
+      security: []
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              examples:
+                ok:
+                  value:
+                    status: ok
+                    service: iot-ingestion
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /readings:
+    post:
+      tags: [Readings]
+      summary: Submit sensor reading
+      operationId: createReading
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SensorReadingCreate'
+            examples:
+              valid:
+                value:
+                  deviceId: sensor-001
+                  metric: temperature
+                  value: 28.5
+                  unit: celsius
+                  timestamp: '2026-05-25T08:00:00Z'
+              boundary:
+                value:
+                  deviceId: sensor-001
+                  metric: temperature
+                  value: 80
+                  unit: celsius
+                  timestamp: '2026-05-25T08:00:00Z'
+      responses:
+        '201':
+          description: Reading created
+          headers:
+            X-Warning:
+              description: Optional warning for boundary values
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SensorReadingResponse'
+              examples:
+                created:
+                  value:
+                    readingId: rd-1001
+                    deviceId: sensor-001
+                    metric: temperature
+                    value: 28.5
+                    unit: celsius
+                    status: accepted
+                    createdAt: '2026-05-25T08:00:01Z'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+    get:
+      tags: [Readings]
+      summary: Get latest sensor readings
+      operationId: listLatestReadings
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: metric
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [temperature, humidity, motion, smoke]
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        '200':
+          description: Latest readings
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SensorReadingResponse'
+              examples:
+                latest:
+                  value:
+                    items:
+                      - readingId: rd-1001
+                        deviceId: sensor-001
+                        metric: temperature
+                        value: 28.5
+                        unit: celsius
+                        status: accepted
+                        createdAt: '2026-05-25T08:00:01Z'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /readings/{readingId}:
+    get:
+      tags: [Readings]
+      summary: Get reading detail
+      operationId: getReadingById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: readingId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^rd-[0-9]+$'
+          example: rd-1001
+      responses:
+        '200':
+          description: Reading detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SensorReadingResponse'
+              examples:
+                detail:
+                  value:
+                    readingId: rd-1001
+                    deviceId: sensor-001
+                    metric: temperature
+                    value: 28.5
+                    unit: celsius
+                    status: accepted
+                    createdAt: '2026-05-25T08:00:01Z'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status, service]
+      properties:
+        status:
+          type: string
+          enum: [ok]
+        service:
+          type: string
+          example: iot-ingestion
+    SensorReadingCreate:
+      type: object
+      required: [deviceId, metric, value, unit]
+      properties:
+        deviceId:
+          type: string
+          minLength: 3
+          maxLength: 50
+          pattern: '^[a-zA-Z0-9_-]+$'
+          example: sensor-001
+        metric:
+          type: string
+          enum: [temperature, humidity, motion, smoke]
+        value:
+          type: number
+          minimum: -50
+          maximum: 1000
+          example: 28.5
+        unit:
+          type: string
+          enum: [celsius, percent, boolean, ppm]
+        timestamp:
+          type: string
+          format: date-time
+    SensorReadingResponse:
+      type: object
+      required: [readingId, deviceId, metric, value, unit, status, createdAt]
+      properties:
+        readingId:
+          type: string
+          pattern: '^rd-[0-9]+$'
+        deviceId:
+          type: string
+        metric:
+          type: string
+          enum: [temperature, humidity, motion, smoke]
+        value:
+          type: number
+        unit:
+          type: string
+          enum: [celsius, percent, boolean, ppm]
+        status:
+          type: string
+          enum: [accepted, rejected]
+        createdAt:
+          type: string
+          format: date-time
+    ProblemDetails:
+      type: object
+      required: [type, title, status]
+      properties:
+        type:
+          type: string
+          example: https://example.com/problems/validation-error
+        title:
+          type: string
+          example: Validation Error
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+        detail:
+          type: string
+          example: deviceId is required
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            badRequest:
+              value:
+                type: https://example.com/problems/bad-request
+                title: Bad Request
+                status: 400
+                detail: Invalid query parameter
+    Unauthorized:
+      description: Missing or invalid token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            unauthorized:
+              value:
+                type: https://example.com/problems/unauthorized
+                title: Unauthorized
+                status: 401
+                detail: Missing or invalid bearer token
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            validation:
+              value:
+                type: https://example.com/problems/validation-error
+                title: Validation Error
+                status: 422
+                detail: deviceId is required
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            notFound:
+              value:
+                type: https://example.com/problems/not-found
+                title: Not Found
+                status: 404
+                detail: Reading not found
+    TooManyRequests:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            rateLimit:
+              value:
+                type: https://example.com/problems/rate-limit
+                title: Too Many Requests
+                status: 429
+                detail: Rate limit exceeded

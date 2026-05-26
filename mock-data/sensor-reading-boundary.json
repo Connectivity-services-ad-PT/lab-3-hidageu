@@ -1,0 +1,8 @@
+[
+  {
+    "deviceId": "sensor-004",
+    "metric": "temperature",
+    "value": 80,
+    "unit": "celsius"
+  }
+]

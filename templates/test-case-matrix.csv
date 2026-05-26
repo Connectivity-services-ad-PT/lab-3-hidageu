@@ -1,0 +1,16 @@
+ID,Folder,Test name,Endpoint,Method,Input,Expected status,Type
+TC01,01_Functional,GET health,/health,GET,No body,200,Happy path
+TC02,01_Functional,POST create valid reading,/readings,POST,Valid sensor reading,201,Happy path
+TC03,01_Functional,GET latest readings,/readings?metric=temperature&limit=10,GET,Valid query,200,Happy path
+TC04,01_Functional,GET reading detail,/readings/rd-1001,GET,Valid readingId,200,Happy path
+TC05,02_Auth,POST valid token,/readings,POST,Bearer {{authToken}},200/201,Auth
+TC06,02_Auth,POST missing token,/readings,POST,No Authorization header,401/403,Auth negative
+TC07,02_Auth,POST wrong token,/readings,POST,Bearer wrong-token,401/403,Auth negative
+TC08,03_Negative,POST missing deviceId,/readings,POST,Missing required field,400/422,Negative
+TC09,03_Negative,POST invalid metric enum,/readings,POST,metric=wind,400/422,Negative
+TC10,03_Negative,GET invalid limit query,/readings?limit=9999,GET,limit exceeds maximum,400/422,Negative
+TC11,04_Boundary_Reliability,POST boundary high temperature,/readings,POST,value=80,201/400/422,Boundary
+TC12,04_Boundary_Reliability,GET max limit boundary,/readings?limit=100,GET,limit=100,200,Boundary
+TC13,04_Boundary_Reliability,GET rate limit behavior documented,/readings?limit=10,GET,Normal request,200/429,Reliability
+TC14,05_Consumer_side_Smoke,POST AI Vision detect mock,{{aiVisionMockUrl}}/detect,POST,imageUrl,200,Consumer-side smoke
+TC15,06_Local_only_NonFunctional,GET local response time,/health,GET,env=local,200 and <1000ms,Local nonfunctional

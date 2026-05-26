@@ -20,7 +20,7 @@ jobs:
         run: npm install
 
       - name: Lint OpenAPI contracts
-        run: npx @stoplight/spectral-cli lint contracts/*.yaml > reports/contract-lint-report.txt
+        run: npx spectral lint "contracts/*.yaml" > reports/contract-lint-report.txt
 
       - name: Start IoT Prism mock server
         run: nohup npm run mock:iot > prism-iot.log 2>&1 &
